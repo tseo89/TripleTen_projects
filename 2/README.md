@@ -28,18 +28,18 @@ In this step, you will prepare the data for analysis by addressing data types, m
 ### Step 3: Data Analysis
 This step involves performing various analyses on the preprocessed data.
 
-#### A. Data Validation and Basic Analysis (must complete all to pass)
+#### A. Data Validation and Basic Analysis 
 - Verify that values in the 'order_hour_of_day' and 'order_dow' columns in the orders table are sensible.
 - Create a plot showing the number of orders placed for each hour of the day.
 - Create a plot showing the day of the week when people shop for groceries.
 - Create a plot showing how long people wait before placing their next order and comment on the minimum and maximum values.
 
-#### B. Further Data Analysis (must complete all to pass)
+#### B. Further Data Analysis 
 - Analyze whether there is a difference in 'order_hour_of_day' distributions on Wednesdays and Saturdays. Plot histograms for both days on the same plot and describe the differences.
 - Plot the distribution of the number of orders that customers place.
 - Identify the top 20 products that are ordered most frequently and display their IDs and names.
 
-#### C. Advanced Data Analysis (must complete at least two to pass)
+#### C. Advanced Data Analysis 
 - Determine how many items people typically buy in one order and describe the distribution.
 - Identify the top 20 items that are reordered most frequently and display their names and product IDs.
 - Calculate the proportion of orders that are reorders for each product and create a table with columns for the product ID, product name, and reorder proportion.
