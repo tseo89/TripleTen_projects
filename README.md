@@ -1,10 +1,64 @@
-# TripleTen_projects
-Projects I worked on while attending the Data Science TripleTen Bootcamp.
+# CarSalesAd
+pandas==1.3.1
+plotly==5.15.0
+streamlit==1.12.2
+altair<5
 
+# Link
+https://s4p2.onrender.com/
 
-| Project number | Title | Description |
-| :-----------: | ----------- |----------- |
-| 1 |[YandexMusic Analysis](https://github.com/tseo89/TripleTen_projects/tree/main/1)| This Project analyzes user behavior and music preferences in the cities of Springfield and Shelbyville using real Yandex.Music data and basic Python skills. The project tests three hypotheses about user activity, genre preferences, and more.|
-| 2 | [Instacart Data Analysis](https://github.com/tseo89/TripleTen_projects/tree/main/2) | The project involves working with data from Instacart, a grocery delivery platform. The dataset provided has been modified from the original to make calculations faster and includes missing and duplicate values while preserving the original data's distribution. |
-| 3 | [Statistical Data Analysis of Phone Plans](https://github.com/tseo89/TripleTen_projects/tree/main/3) | Carry out a preliminary analysis of the plans based on clients' behavior and determine which plan brings in more revenue. |
-| 4 | TBD |  |
+# Car Sales Data Analysis Web Application
+
+## Overview
+
+The Car Sales Data Analysis Web Application is a tool for exploring and analyzing data related to car sales advertisements. This application provides insights into the car sales market and helps users understand trends and patterns in the data.
+
+## Features
+
+- **Exploratory Data Analysis (EDA):** The application offers interactive visualizations, including histograms and scatterplots, to help users gain a deeper understanding of the dataset.
+
+- **Data Filtering:** Users can filter the data to focus on specific criteria, such as price, mileage, or vehicle condition.
+
+- **Statistical Analysis:** The application provides summary statistics, including median, mean, minimum, and maximum prices for different car attributes.
+
+- **Data Source:** The application uses a dataset of car sales advertisements, making it a valuable resource for car buyers, sellers, and enthusiasts.
+
+## Getting Started
+
+To run the Car Sales Data Analysis Web Application on your local machine, follow these steps:
+
+1. Clone this GitHub repository to your local machine.
+
+   ```
+   git clone <repository_url>
+   ```
+
+2. Navigate to the project directory.
+
+   ```
+   cd Car-Sales-Data-Analysis-Web-App
+   ```
+
+3. Install the required Python packages using pip (you can create a virtual environment if needed).
+
+   ```
+   pip install -r requirements.txt
+   ```
+
+4. Run the application using Streamlit.
+
+   ```
+   streamlit run app.py
+   ```
+
+5. Open your web browser and access the application at [http://localhost:8501](http://localhost:8501).
+
+## Usage
+
+- Once the application is running, you can use the web interface to explore the data and visualize it using various tools provided.
+
+- Filter the data based on your preferences to focus on specific aspects of car sales.
+
+- Explore the statistical summaries to understand the dataset better.
+
+Feel free to customize this README to match your specific project details, such as adding acknowledgments, a license, and contact information.
