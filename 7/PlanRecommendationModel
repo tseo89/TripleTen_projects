@@ -1,0 +1,833 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "cb05044b",
+   "metadata": {},
+   "source": [
+    "# Project Description\n",
+    "\n",
+    "Mobile carrier Megaline has found out that many of their subscribers use legacy plans. They want to develop a model that would analyze subscribers' behavior and recommend one of Megaline's newer plans: Smart or Ultra. \n",
+    "\n",
+    "You have access to behavior data about subscribers who have already switched to the new plans (from the project for the Statistical Data Analysis course). For this classification task, you need to develop a model that will pick the right plan. Since you’ve already performed the data preprocessing step, you can move straight to creating the model.  \n",
+    "\n",
+    "Develop a model with the highest possible accuracy. In this project, the threshold for accuracy is 0.75. Check the accuracy using the test dataset.  "
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "d44d31b6",
+   "metadata": {},
+   "source": [
+    "## Exploratory Data Analysis"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "e39186c6",
+   "metadata": {},
+   "source": [
+    "### Importing"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "69a07c86",
+   "metadata": {},
+   "source": [
+    "#### Importing Libraries"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "45e14b18",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from IPython.display import Image\n",
+    "import pandas as pd\n",
+    "\n",
+    "import numpy as np\n",
+    "import matplotlib.pyplot as plt\n",
+    "from scipy import stats as st\n",
+    "from sklearn.tree import DecisionTreeClassifier\n",
+    "from sklearn.ensemble import RandomForestClassifier\n",
+    "from sklearn.linear_model import LogisticRegression\n",
+    "from sklearn.preprocessing import StandardScaler\n",
+    "from sklearn.metrics import accuracy_score\n",
+    "from sklearn.metrics import f1_score, roc_auc_score, precision_score, recall_score\n",
+    "from sklearn.model_selection import GridSearchCV\n",
+    "from sklearn.model_selection import train_test_split\n",
+    "%matplotlib inline"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "c8a9bd60",
+   "metadata": {},
+   "source": [
+    "#### Import and Review Data"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "4aa40157",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>calls</th>\n",
+       "      <th>minutes</th>\n",
+       "      <th>messages</th>\n",
+       "      <th>mb_used</th>\n",
+       "      <th>is_ultra</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>40.0</td>\n",
+       "      <td>311.90</td>\n",
+       "      <td>83.0</td>\n",
+       "      <td>19915.42</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>85.0</td>\n",
+       "      <td>516.75</td>\n",
+       "      <td>56.0</td>\n",
+       "      <td>22696.96</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>77.0</td>\n",
+       "      <td>467.66</td>\n",
+       "      <td>86.0</td>\n",
+       "      <td>21060.45</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>106.0</td>\n",
+       "      <td>745.53</td>\n",
+       "      <td>81.0</td>\n",
+       "      <td>8437.39</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>66.0</td>\n",
+       "      <td>418.74</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>14502.75</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   calls  minutes  messages   mb_used  is_ultra\n",
+       "0   40.0   311.90      83.0  19915.42         0\n",
+       "1   85.0   516.75      56.0  22696.96         0\n",
+       "2   77.0   467.66      86.0  21060.45         0\n",
+       "3  106.0   745.53      81.0   8437.39         1\n",
+       "4   66.0   418.74       1.0  14502.75         0"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    },
+    {
+     "data": {
+      "text/plain": [
+       "(3214, 5)"
+      ]
+     },
+     "execution_count": 2,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df = pd.read_csv('/datasets/users_behavior.csv')\n",
+    "display(df.head(5))\n",
+    "df.shape"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "d6810f4c",
+   "metadata": {},
+   "source": [
+    "<div class=\"alert alert-info\"> <b> Data Review </b>:\n",
+    "    <li> There are 5 columns and 3214 rows in this data.</li>\n",
+    "    <li> We do not have any missing data in any of the columns </li>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "8479c2b6",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "0\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Let's checkf or duplicates of the file\n",
+    "\n",
+    "print(df.duplicated().sum())"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "e20893fe",
+   "metadata": {},
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "0969ae3f",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>calls</th>\n",
+       "      <th>minutes</th>\n",
+       "      <th>messages</th>\n",
+       "      <th>mb_used</th>\n",
+       "      <th>is_ultra</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>count</th>\n",
+       "      <td>3214.000000</td>\n",
+       "      <td>3214.000000</td>\n",
+       "      <td>3214.000000</td>\n",
+       "      <td>3214.000000</td>\n",
+       "      <td>3214.000000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>mean</th>\n",
+       "      <td>63.038892</td>\n",
+       "      <td>438.208787</td>\n",
+       "      <td>38.281269</td>\n",
+       "      <td>17207.673836</td>\n",
+       "      <td>0.306472</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>std</th>\n",
+       "      <td>33.236368</td>\n",
+       "      <td>234.569872</td>\n",
+       "      <td>36.148326</td>\n",
+       "      <td>7570.968246</td>\n",
+       "      <td>0.461100</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>min</th>\n",
+       "      <td>0.000000</td>\n",
+       "      <td>0.000000</td>\n",
+       "      <td>0.000000</td>\n",
+       "      <td>0.000000</td>\n",
+       "      <td>0.000000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>25%</th>\n",
+       "      <td>40.000000</td>\n",
+       "      <td>274.575000</td>\n",
+       "      <td>9.000000</td>\n",
+       "      <td>12491.902500</td>\n",
+       "      <td>0.000000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>50%</th>\n",
+       "      <td>62.000000</td>\n",
+       "      <td>430.600000</td>\n",
+       "      <td>30.000000</td>\n",
+       "      <td>16943.235000</td>\n",
+       "      <td>0.000000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>75%</th>\n",
+       "      <td>82.000000</td>\n",
+       "      <td>571.927500</td>\n",
+       "      <td>57.000000</td>\n",
+       "      <td>21424.700000</td>\n",
+       "      <td>1.000000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>max</th>\n",
+       "      <td>244.000000</td>\n",
+       "      <td>1632.060000</td>\n",
+       "      <td>224.000000</td>\n",
+       "      <td>49745.730000</td>\n",
+       "      <td>1.000000</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "             calls      minutes     messages       mb_used     is_ultra\n",
+       "count  3214.000000  3214.000000  3214.000000   3214.000000  3214.000000\n",
+       "mean     63.038892   438.208787    38.281269  17207.673836     0.306472\n",
+       "std      33.236368   234.569872    36.148326   7570.968246     0.461100\n",
+       "min       0.000000     0.000000     0.000000      0.000000     0.000000\n",
+       "25%      40.000000   274.575000     9.000000  12491.902500     0.000000\n",
+       "50%      62.000000   430.600000    30.000000  16943.235000     0.000000\n",
+       "75%      82.000000   571.927500    57.000000  21424.700000     1.000000\n",
+       "max     244.000000  1632.060000   224.000000  49745.730000     1.000000"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "display(df.describe())"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "43e75b95",
+   "metadata": {},
+   "source": [
+    "<div class=\"alert alert-info\"> <b> Analysis Review </b>:\n",
+    "    <li> Total observed data is 3214</li>\n",
+    "    <li> There aren't any missing values in any of the columns and there are not duplicate rows.</li>\n",
+    "    <li> There are total of 4 numeric value type columns and 1 categorical value column. is_ultra has numeric value, but the numeric value indicates whether a customer is a Ulatra plan user or not. Numeric value doesn't represent any gage in this column.</li>\n",
+    "    <li> Variables<ul>\n",
+    "        <li> Calls <ul>\n",
+    "            <li> Minimum call value is 0 and Maximum call value is 244 </li>\n",
+    "            <li> Median call value is 62 and Average call value is 63.04 </li>\n",
+    "            </ul>\n",
+    "        <li> Minutes<ul>\n",
+    "            <li> Minimum minutes value is 0 and Maximum minutes value is 1632.06</li>\n",
+    "            <li> Median minutes value is 430.6 and Average minutes value is 438.21</li>\n",
+    "            </ul>\n",
+    "        <li> Messages<ul>\n",
+    "            <li> Minimum messages value is 0 and Maximum messages value is 224</li>\n",
+    "            <li> Median messages value is 30 and Average messages value is 38.28</li>\n",
+    "            </ul>\n",
+    "        <li> MB Used<ul>\n",
+    "            <li> Minimum mb used value is 0 and Maximum mb used value is 49745.73</li>\n",
+    "            <li> Median mb used value is 16943.24 and Average mb used value is 17207.67</li>\n",
+    "            </ul>\n",
+    "        <li> Ultra vs Smart <ul>\n",
+    "            <li> There are 2229 Ultra users and 985 Smart plan users. </li>\n",
+    "            </ul>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "97eb4c7f",
+   "metadata": {},
+   "source": [
+    "## Spliting the data set\n",
+    "Split the data into training - 60%, validation - 20%, test - 20%"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "0cfd04b8",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "x = df.drop(['is_ultra'], axis=1)\n",
+    "y = df['is_ultra']"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "0f8e102f",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "x_train, x_test, y_train, y_test = train_test_split(\n",
+    "    x, y, test_size=0.2, random_state=4321)\n",
+    "\n",
+    "x_train, x_val, y_train, y_val = train_test_split(\n",
+    "    x_train, y_train, test_size=0.25, random_state=4321)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "98e90149",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "x_train size: (1928, 4)\n",
+      "x_test size: (643, 4)\n",
+      "x_val size: (643, 4)\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Confirm the size of splitted data sets\n",
+    "print('x_train size:', x_train.shape)\n",
+    "print('x_test size:', x_test.shape)\n",
+    "print('x_val size:', x_val.shape)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "2bbfde49",
+   "metadata": {},
+   "source": [
+    "## Training Models"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "25b320ee",
+   "metadata": {},
+   "source": [
+    "### Decision Tree Model and Evaluation"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "id": "12373c99",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "0.7153965785381027"
+      ]
+     },
+     "execution_count": 8,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "tree = DecisionTreeClassifier(random_state=4321)\n",
+    "tree.fit(x_train, y_train)\n",
+    "tree.score(x_val, y_val)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "23360287",
+   "metadata": {},
+   "source": [
+    "#### Use hyperparameter tuning to improve the model"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "e53f4f73",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Best depth:  8\n"
+     ]
+    }
+   ],
+   "source": [
+    "best_depth = 0\n",
+    "best_val_accuracy = 0\n",
+    "for i in range(1, 21):\n",
+    "    tree = DecisionTreeClassifier(random_state=4321, max_depth=i)\n",
+    "    tree.fit(x_train, y_train)\n",
+    "    val_accuracy=tree.score(x_val,y_val)\n",
+    "    if val_accuracy > best_val_accuracy:\n",
+    "        best_val_accuracy = val_accuracy\n",
+    "        best_depth=i\n",
+    "print(\"Best depth: \",best_depth)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "id": "4ba05603",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Test Accuracy of Decision Tree Model is:  0.7962674961119751\n"
+     ]
+    }
+   ],
+   "source": [
+    "tr_final = DecisionTreeClassifier(max_depth=best_depth, random_state=4321)\n",
+    "tr_final.fit(x_train,y_train)\n",
+    "tr_acc = tr_final.score(x_test, y_test)\n",
+    "print(\"Test Accuracy of Decision Tree Model is: \", tr_acc)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "b5a4f9ed",
+   "metadata": {},
+   "source": [
+    "<div class=\"alert alert-info\"> <b> Decision Tree Classifier Review </b>:\n",
+    "    <li> Best max depth for decision tree is 8 at validation accuracy rate of 79.62%</li>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "05add462",
+   "metadata": {},
+   "source": [
+    "### Random Forest Model and Evaluation"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "id": "82a2b921",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "0.7713841368584758"
+      ]
+     },
+     "execution_count": 11,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "rf = RandomForestClassifier(random_state=4321)\n",
+    "rf.fit(x_train, y_train)\n",
+    "rf.score(x_val, y_val)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "9006c5cf",
+   "metadata": {},
+   "source": [
+    "#### Improve the model"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "id": "900d4419",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Best Parameters: {'max_depth': 10, 'n_estimators': 150}\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Hyperparameter tuning using GridSearchCV\n",
+    "param_grid = {\n",
+    "    'n_estimators': [50, 100, 150],  # Number of trees in the forest\n",
+    "    'max_depth': [None, 5, 10, 15]  # Maximum depth of the trees\n",
+    "}\n",
+    "\n",
+    "rf = RandomForestClassifier(random_state=4321)\n",
+    "grid_search = GridSearchCV(rf, param_grid, cv=None, scoring='accuracy')\n",
+    "grid_search.fit(pd.concat([x_train, x_val]), pd.concat([y_train, y_val]))\n",
+    "\n",
+    "# Get the best parameters\n",
+    "best_params = grid_search.best_params_\n",
+    "print(\"Best Parameters:\", best_params)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "id": "6270a91c",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Test Accuracy of Random Forest Model is:  0.7822706065318819\n"
+     ]
+    }
+   ],
+   "source": [
+    "rf_final = RandomForestClassifier(random_state=4321,n_estimators=150,max_depth=10)\n",
+    "rf_final.fit(x_train,y_train)\n",
+    "rf_final_acc=rf_final.score(x_val,y_val)\n",
+    "print(\"Test Accuracy of Random Forest Model is: \", rf_final_acc)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "888e2a78",
+   "metadata": {},
+   "source": [
+    "<div class=\"alert alert-info\"> <b> Random Forest Classifier Review </b>:\n",
+    "    <li> Best parameter when using Random Forest Classifer is max_depth=10 and n_estimators = 150. This yields the accuracy rate of 78.23%</li>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "4a9d9420",
+   "metadata": {},
+   "source": [
+    "### Logic Regression Model and Evaluation"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "id": "cf916c88",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Accuracy of the logistic regression model on the training set:  0.7152489626556017\n",
+      "Accuracy of the logistic regression model on the validation set:  0.713841368584759\n"
+     ]
+    }
+   ],
+   "source": [
+    "lg = LogisticRegression(random_state=4321,solver='liblinear')\n",
+    "lg.fit(x_train,y_train)\n",
+    "lg_train_score=lg.score(x_train,y_train)\n",
+    "lg_val_score = lg.score(x_val,y_val)\n",
+    "\n",
+    "print(\"Accuracy of the logistic regression model on the training set: \", lg_train_score)\n",
+    "print(\"Accuracy of the logistic regression model on the validation set: \", lg_val_score)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "c7b640da",
+   "metadata": {},
+   "source": [
+    "#### Improve the model"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "id": "b1fbbe30",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/opt/conda/lib/python3.9/site-packages/sklearn/linear_model/_logistic.py:763: ConvergenceWarning: lbfgs failed to converge (status=1):\n",
+      "STOP: TOTAL NO. of ITERATIONS REACHED LIMIT.\n",
+      "\n",
+      "Increase the number of iterations (max_iter) or scale the data as shown in:\n",
+      "    https://scikit-learn.org/stable/modules/preprocessing.html\n",
+      "Please also refer to the documentation for alternative solver options:\n",
+      "    https://scikit-learn.org/stable/modules/linear_model.html#logistic-regression\n",
+      "  n_iter_i = _check_optimize_result(\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Best Parameters: {'C': 0.01, 'solver': 'lbfgs'}\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Hyperparameter tuning using GridSearchCV\n",
+    "param_grid = {\n",
+    "    'C': [0.01, 0.1, 1, 10],  # Inverse of regularization strength\n",
+    "    'solver': ['liblinear', 'lbfgs']  # Algorithm to use in the optimization problem\n",
+    "}\n",
+    "\n",
+    "grid_search = GridSearchCV(lg, param_grid, cv=None, scoring='accuracy')\n",
+    "grid_search.fit(pd.concat([x_train, x_val]), pd.concat([y_train, y_val]))\n",
+    "\n",
+    "# Get the best parameters\n",
+    "best_params = grid_search.best_params_\n",
+    "print(\"Best Parameters:\", best_params)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "id": "182f3fe9",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Test Accuracy of Logistic Regression Model is:  0.71850699844479\n"
+     ]
+    }
+   ],
+   "source": [
+    "lg_final=LogisticRegression(**best_params,random_state=4321)\n",
+    "lg_final.fit(pd.concat([x_train, x_val]), pd.concat([y_train, y_val]))\n",
+    "\n",
+    "lg_final_acc=lg_final.score(x_test,y_test)\n",
+    "print(\"Test Accuracy of Logistic Regression Model is: \", lg_final_acc)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "ded2562d",
+   "metadata": {},
+   "source": []
+  },
+  {
+   "cell_type": "markdown",
+   "id": "43387a72",
+   "metadata": {},
+   "source": [
+    "<div class=\"alert alert-info\"> <b> Logistic Regression Model Review </b>:\n",
+    "    <li> Best parameter when using Logistic Regression Model is {'C': 0.01, 'solver': 'lbfgs'}. This yields  the accuracy rate of 71.85%</li>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "7ba98320",
+   "metadata": {},
+   "source": [
+    "<div class=\"alert alert-info\"> <b> Model Comparison and model decision </b>:\n",
+    "    <li> Based on the accuracy of the models, Decision Tree yielded the best result with accuracy rate of 79.63%</li>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "081bdddc",
+   "metadata": {},
+   "source": [
+    "## Sanity Check"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "5c2352af",
+   "metadata": {},
+   "source": [
+    "<div class=\"alert alert-info\"> <b> Is the model doing anything? </b>:\n",
+    "    <li> Chances of guessing if a customer is better fit for Ultra is 69.35% based on data. (2229/(2229+985))</li>\n",
+    "    <li> Hence, if a model's acccuracy is lower than 69.35% we can say that it's not doing any better than just guessing. </li> \n",
+    "    <li> In our case, all 3 models yielded higher accuracy than 69.35% so it's they are doing better than just guess work <ul>\n",
+    "        <li> out of the 3 models we have created, "
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "a7de70ab",
+   "metadata": {},
+   "source": [
+    "<div class=\"alert alert-block alert-success\">✔️\n",
+    "    \n",
+    "\n",
+    "__Reviewer's comment №2__\n",
+    "\n",
+    "\n",
+    "Otherwise it's great😊. Your project is begging for github =)   \n",
+    "    \n",
+    "Congratulations on the successful completion of the project 😊👍\n",
+    "And I wish you success in new works 😊"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.11.5"
+  },
+  "toc": {
+   "base_numbering": 1,
+   "nav_menu": {},
+   "number_sections": true,
+   "sideBar": true,
+   "skip_h1_title": false,
+   "title_cell": "Table of Contents",
+   "title_sidebar": "Contents",
+   "toc_cell": false,
+   "toc_position": {},
+   "toc_section_display": true,
+   "toc_window_display": true
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
