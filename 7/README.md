@@ -1,12 +1,42 @@
-# TripleTen_projects
-Projects I worked on while attending the Data Science TripleTen Bootcamp.
+# Megaline Subscribers Plan Recommendation Model
 
+This project aims to develop a classification model that recommends one of Megaline's newer plans (Smart or Ultra) based on the behavior data of subscribers who have already switched to the new plans.
 
-| Project number | Title | Description |
-| :-----------: | ----------- |----------- |
-| 1 |[YandexMusic Analysis](https://github.com/tseo89/TripleTen_projects/tree/main/1)| This Project analyzes user behavior and music preferences in the cities of Springfield and Shelbyville using real Yandex. Music data and basic Python skills. The project tests three hypotheses about user activity, genre preferences, and more.|
-| 2 | [Instacart Data Analysis](https://github.com/tseo89/TripleTen_projects/tree/main/2) | The project involves working with data from Instacart, a grocery delivery platform. The dataset provided has been modified from the original to make calculations faster and includes missing and duplicate values while preserving the original data's distribution. |
-| 3 | [Statistical Data Analysis of Phone Plans](https://github.com/tseo89/TripleTen_projects/tree/main/3) | Carry out a preliminary analysis of the plans based on clients' behavior and determine which plan brings in more revenue. |
-| 4 | [Car Sales Ad](https://github.com/tseo89/TripleTen_projects/tree/main/4)| In this project we are developing and deploying a web application to a cloud service so that it's accessible to the public. We are also going to do some Exploratory Data Analysis on car sales advertisements. |
-| 5 | [Ice Game](https://github.com/tseo89/TripleTen_projects/tree/main/5) | This project involves analyzing data for Ice, an online store selling video games globally, to identify patterns that determine a game's success.|
-| 6 | [Zuber]() | We are going to find patterns to understand passenger preferences and the impact of external factors on rides for Zuber, a new ride-sharing company that's launching in Chicago. |
+## Overview
+
+Mobile carrier Megaline identified that many subscribers are still using legacy plans and wants to offer personalized recommendations to subscribers based on their behavior. This project utilizes behavior data from subscribers who have migrated to the new plans to predict and recommend the appropriate plan.
+
+## Project Tasks
+
+1. **Data Understanding and Preprocessing:**
+   - Explored and preprocessed the dataset containing monthly behavior information about subscribers.
+   - Target Variable: `is_ultra` (Ultra - 1, Smart - 0)
+
+2. **Model Development:**
+   - Split the dataset into training, validation, and test sets.
+   - Investigated multiple classification models and tuned hyperparameters to achieve the highest possible accuracy.
+
+3. **Model Evaluation:**
+   - Checked the model's accuracy using the test dataset and assessed its performance against the threshold of 0.75.
+
+4. **Sanity Check:**
+   - Performed a sanity check on the model's predictions to ensure reliability.
+
+## Dataset Information
+
+The dataset consists of monthly behavior information about subscribers:
+- `calls`: Number of calls
+- `minutes`: Total call duration in minutes
+- `messages`: Number of text messages
+- `mb_used`: Internet traffic used in MB
+- `is_ultra`: Plan for the current month (Ultra - 1, Smart - 0)
+
+## Files Included
+
+- `users_behavior.csv`: Dataset used for modeling 
+
+## Project Findings
+
+- Explored various models and hyperparameters to improve model accuracy.
+- Evaluated models against the test set and achieved accuracy above the required threshold.
+- Additional insights or findings discovered during the model development process.
