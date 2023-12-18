@@ -10,7 +10,6 @@ The project aims to identify the most lucrative region for investing in oil well
 
 - `data/`: Contains synthetic data for three different regions (Region 0, Region 1, Region 2).
 - `notebooks/`: Jupyter notebooks detailing the step-by-step analysis and modeling process.
-- `src/`: Python scripts for data preprocessing, model training, and profit calculations.
 - `README.md`: Overview and instructions for the project.
 
 ## Key Steps
