@@ -5,7 +5,7 @@ Sure Tomorrow Insurance company aims to leverage machine learning for several ta
 ## Project Tasks
 ### Task 1: Customer Similarity Analysis
 
-Identify customers similar to a given customer to assist marketing efforts. Define function that returns k nearest neighbors for an $n^t{th}$ object based on a specified distance metric. We'll explore how the kNN algorithm will be impacted by scaling. Also, we will also explore similarity between the Manhattan distance metric. 
+Identify customers similar to a given customer to assist marketing efforts. Define function that returns k nearest neighbors for an $n^{th}$ object based on a specified distance metric. We'll explore how the kNN algorithm will be impacted by scaling. Also, we will also explore similarity between the Manhattan distance metric. 
 
 ### Task 2: Insurance Benefit Prediction
 
