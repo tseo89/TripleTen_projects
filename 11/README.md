@@ -44,12 +44,3 @@ Develop a data transformation algorithm (data masking or obfuscation) to protect
 - **Features**: insured person's gender, age, salary, number of family members.
 - **Target**: number of insurance benefits received by an insured person over the last five years.
 
-## Evaluation Criteria
-
-The project will be evaluated based on adherence to instructions, project structure, code quality, completion of tasks, and presentation of conclusions.
-
----
-
-For detailed implementation steps and additional information, refer to the project template provided.
-
-Good luck with your project! If you have any questions or need further assistance, feel free to ask.
