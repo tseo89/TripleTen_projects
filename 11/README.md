@@ -1,6 +1,6 @@
 # Sure Tomorrow Insurance Machine Learning Project
 
-Sure Tomorrow insurance company aims to leverage machine learning for several tasks related to customer analysis and prediction. This project addresses the following tasks:
+Sure Tomorrow Insurance company aims to leverage machine learning for several tasks related to customer analysis and prediction. This project addresses the following tasks:
 
 ## Task 1: Customer Similarity Analysis
 
@@ -16,7 +16,10 @@ Build a linear regression model to predict the number of insurance benefits a ne
 
 ## Task 4: Data Masking for Privacy Protection
 
-Develop a data transformation algorithm (data masking or obfuscation) to protect clients' personal data while maintaining model quality.
+Develop a data transformation algorithm (data masking or obfuscation) to protect clients' data while maintaining model quality.
+
+## Task 5: Linear Regression with Obfuscation
+Prove that Linear Regression works computationally with obfuscation transformation. 
 
 ## Project Instructions
 
@@ -29,9 +32,10 @@ Develop a data transformation algorithm (data masking or obfuscation) to protect
    - Task 2: Develop and evaluate an insurance benefit prediction model.
    - Task 3: Build and assess a linear regression model for benefit count prediction.
    - Task 4: Implement data masking technique to protect personal data.
+   - Task 5: Demonstrate Linear Regression with obfuscation.
 
 4. **Project Structure**:
-   - Follow the provided project template and complete necessary code sections.
+   - Follow the provided project template and complete the necessary code sections.
    - Keep the code organized, neat, and well-documented.
 
 5. **Evaluation**:
